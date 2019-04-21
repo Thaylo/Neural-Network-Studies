@@ -18,7 +18,7 @@ class NeuralLayer:
         self.input_tensor = input_data.copy()
 
     def update_state(self):
-        y = np.dot(self.weights, self.input_tensor)
+        y = sigmoid(np.dot(self.weights, self.input_tensor))
         assert(y.shape == self.output_tensor.shape)
         self.output_tensor = y
         return y
@@ -48,7 +48,7 @@ class NeuralNetwork:
 
     def compute_gradient(self, x, d):
         y = self.feed_forward(x)
-        del_y = d - y
+        del_y = y - d
 
         for layer in reversed(self.layers):
             w = layer.weights
@@ -62,8 +62,7 @@ class NeuralNetwork:
 
     def optimize(self, input_data, output_data):
 
-        for iter in range(100):
-            e2 = 0
+        for iter in range(25000):
             for i in range(4):
                 x = input_data[:, i].reshape(2, 1)
                 d = output_data[:, i].reshape(1, 1)
@@ -71,12 +70,7 @@ class NeuralNetwork:
 
                 for layer in self.layers:
                     grad = layer.grad_w
-                    layer.weights -= 0.02 * grad
-
-                error = self.feed_forward(x) - d
-
-                e2 = np.dot(error, error.T)/4
-                print(e2)
+                    layer.weights -= 0.1 * grad
 
 
 def sigmoid(x, derivative=False):
