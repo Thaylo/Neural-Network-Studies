@@ -48,19 +48,35 @@ class NeuralNetwork:
 
     def compute_gradient(self, x, d):
         y = self.feed_forward(x)
-        y_prev = x
-        del_y = y - d
+        del_y = d - y
 
         for layer in reversed(self.layers):
             w = layer.weights
             y = layer.output_tensor
-            del_x = np.multiply(del_y, y * (1.0 - y))
+            y_prev = layer.input_tensor
+            del_y_del_x = np.multiply(y, (1. - y))
+            del_x = np.multiply(del_y, del_y_del_x)
             layer.grad_w = np.dot(del_x, y_prev.T)
             del_y_prev = np.dot(w.T, del_x)
             del_y = del_y_prev
-            
-            print(del_y)
 
+    def optimize(self, input_data, output_data):
+
+        for iter in range(100):
+            e2 = 0
+            for i in range(4):
+                x = input_data[:, i].reshape(2, 1)
+                d = output_data[:, i].reshape(1, 1)
+                self.compute_gradient(x, d)
+
+                for layer in self.layers:
+                    grad = layer.grad_w
+                    layer.weights -= 0.02 * grad
+
+                error = self.feed_forward(x) - d
+
+                e2 = np.dot(error, error.T)/4
+                print(e2)
 
 
 def sigmoid(x, derivative=False):
