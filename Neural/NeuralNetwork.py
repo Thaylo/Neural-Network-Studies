@@ -5,10 +5,12 @@ class NeuralLayer:
     input_tensor = []
     weights = []
     output_tensor = []
+    grad_w = []
 
     def __init__(self, input_dimension, weights_dimension, output_dimension):
         self.input_tensor = np.random.rand(input_dimension[0], input_dimension[1])
         self.weights = np.random.rand(weights_dimension[0], weights_dimension[1])
+        self.grad_w = np.random.rand(weights_dimension[0], weights_dimension[1])
         self.output_tensor = np.random.rand(output_dimension[0], output_dimension[1])
 
     def input_x(self, input_data):
@@ -43,6 +45,22 @@ class NeuralNetwork:
         final_value = current_input
 
         return final_value
+
+    def compute_gradient(self, x, d):
+        y = self.feed_forward(x)
+        y_prev = x
+        del_y = y - d
+
+        for layer in reversed(self.layers):
+            w = layer.weights
+            y = layer.output_tensor
+            del_x = np.multiply(del_y, y * (1.0 - y))
+            layer.grad_w = np.dot(del_x, y_prev.T)
+            del_y_prev = np.dot(w.T, del_x)
+            del_y = del_y_prev
+            
+            print(del_y)
+
 
 
 def sigmoid(x, derivative=False):
