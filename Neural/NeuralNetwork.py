@@ -26,6 +26,7 @@ class NeuralNetwork:
     layers = []
 
     def __init__(self, nn_configuration_list):
+
         for nn_configuration in nn_configuration_list:
             input_dimension = nn_configuration[0]
             weights_dimension = nn_configuration[1]
@@ -34,15 +35,20 @@ class NeuralNetwork:
 
     def feed_forward(self, input_data):
         current_input = input_data
+
         for layer in self.layers:
             layer.input_x(current_input)
             current_input = layer.update_state()
+
         final_value = current_input
+
         return final_value
 
 
 def sigmoid(x, derivative=False):
     y = 1. / (np.exp(-x) + 1.)
+
     if derivative:
         return np.multiply(y, (1. - y))
+
     return y
