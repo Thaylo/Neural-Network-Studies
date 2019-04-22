@@ -20,5 +20,5 @@ TODO
 
 * **Thaylo Freitas** - *Initial work* - [Thaylo](https://github.com/thaylo)
 
-See also the list of [contributors](https://github.com/Thaylo/Robot-Simulator/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/Thaylo/Neural-Network-Studies/contributors) who participated in this project.
 
