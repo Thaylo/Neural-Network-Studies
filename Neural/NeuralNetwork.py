@@ -4,13 +4,17 @@ import numpy as np
 class NeuralLayer:
     input_tensor = []
     weights = []
+    bias = []
     output_tensor = []
     grad_w = []
+    grad_bias = []
 
     def __init__(self, input_dimension, weights_dimension, output_dimension):
         self.input_tensor = np.random.rand(input_dimension[0], input_dimension[1])
         self.weights = np.random.rand(weights_dimension[0], weights_dimension[1])
         self.grad_w = np.random.rand(weights_dimension[0], weights_dimension[1])
+        self.bias = np.random.rand(output_dimension[0], output_dimension[1])
+        self.grad_bias = np.random.rand(output_dimension[0], output_dimension[1])
         self.output_tensor = np.random.rand(output_dimension[0], output_dimension[1])
 
     def input_x(self, input_data):
@@ -18,7 +22,7 @@ class NeuralLayer:
         self.input_tensor = input_data.copy()
 
     def update_state(self):
-        y = sigmoid(np.dot(self.weights, self.input_tensor))
+        y = sigmoid(np.dot(self.weights, self.input_tensor) + self.bias)
         assert(y.shape == self.output_tensor.shape)
         self.output_tensor = y
         return y
@@ -56,21 +60,22 @@ class NeuralNetwork:
             y_prev = layer.input_tensor
             del_y_del_x = np.multiply(y, (1. - y))
             del_x = np.multiply(del_y, del_y_del_x)
+            layer.grad_bias = del_x
             layer.grad_w = np.dot(del_x, y_prev.T)
             del_y_prev = np.dot(w.T, del_x)
             del_y = del_y_prev
 
     def optimize(self, input_data, output_data):
-
-        for iter in range(25000):
+        for iter in range(5000):
             for i in range(4):
                 x = input_data[:, i].reshape(2, 1)
                 d = output_data[:, i].reshape(1, 1)
                 self.compute_gradient(x, d)
 
                 for layer in self.layers:
-                    grad = layer.grad_w
-                    layer.weights -= 0.1 * grad
+                    alpha = 0.3
+                    layer.weights -= alpha * layer.grad_w
+                    layer.bias -= alpha * layer.grad_bias
 
 
 def sigmoid(x, derivative=False):
