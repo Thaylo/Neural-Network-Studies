@@ -1,5 +1,4 @@
 import numpy as np
-
 import Neural.NeuralNetwork as nN
 
 
@@ -22,16 +21,16 @@ def main():
     input_data = np.fromfile(input_filename, dtype=np.dtype('f8'), sep=' ').reshape(2, 4)
     output_data = np.fromfile(output_filename, dtype=np.dtype('f8'), sep=' ').reshape(1, 4)
 
-    nn.optimize(input_data, output_data)
+    nn.optimize(input_data, output_data, True)
 
     for i in range(4):
         d = output_data[:, i].reshape(1, 1)
-        print(d)
+        #  print(d)
 
     for i in range(4):
         x = input_data[:, i].reshape(2, 1)
         y = nn.feed_forward(x)
-        print(y)
+        #  print(y)
 
 
 if __name__ == "__main__":

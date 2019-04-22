@@ -1,5 +1,5 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 class NeuralLayer:
     input_tensor = []
@@ -65,17 +65,45 @@ class NeuralNetwork:
             del_y_prev = np.dot(w.T, del_x)
             del_y = del_y_prev
 
-    def optimize(self, input_data, output_data):
-        for iter in range(5000):
-            for i in range(4):
-                x = input_data[:, i].reshape(2, 1)
-                d = output_data[:, i].reshape(1, 1)
-                self.compute_gradient(x, d)
+    def optimize(self, input_data, output_data, generate_graph=False):
+        error_historic = []
+        iterations = []
 
-                for layer in self.layers:
-                    alpha = 0.3
-                    layer.weights -= alpha * layer.grad_w
-                    layer.bias -= alpha * layer.grad_bias
+        for iter in range(25000):
+            for layer in self.layers:
+
+                grad_w = np.zeros(layer.grad_w.shape)
+                grad_bias = np.zeros(layer.grad_bias.shape)
+                n_inputs = input_data.shape[1]
+
+                for i in range(n_inputs):
+                    x = input_data[:, i].reshape(2, 1)
+                    d = output_data[:, i].reshape(1, 1)
+                    self.compute_gradient(x, d)
+                    grad_w += layer.grad_w/n_inputs
+                    grad_bias += layer.grad_bias/n_inputs
+
+                alpha = 0.15
+                layer.weights -= alpha * grad_w
+                layer.bias -= alpha * grad_bias
+
+            if generate_graph:
+
+                if iter % 1000 == 0:
+                    iterations.append(iter)
+                    e2 = np.zeros((1, 1))
+                    for i in range(n_inputs):
+                        x = input_data[:, i].reshape(2, 1)
+                        d = output_data[:, i].reshape(1, 1)
+                        err = self.feed_forward(x) - d
+                        e2 += np.dot(err, err.T)/n_inputs
+                    error_historic.append(e2[0, 0])
+
+        if generate_graph:
+            plt.plot(iterations, error_historic)
+            plt.legend(['Quadratic error'])
+            plt.show()
+            plt.savefig("result.png")
 
 
 def sigmoid(x, derivative=False):
