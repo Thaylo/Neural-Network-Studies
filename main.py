@@ -25,12 +25,12 @@ def main():
 
     for i in range(4):
         d = output_data[:, i].reshape(1, 1)
-        #  print(d)
+        print(d)
 
     for i in range(4):
         x = input_data[:, i].reshape(2, 1)
         y = nn.feed_forward(x)
-        #  print(y)
+        print(y)
 
 
 if __name__ == "__main__":

@@ -69,27 +69,24 @@ class NeuralNetwork:
         error_historic = []
         iterations = []
 
-        for iter in range(25000):
+        for iter in range(10000):
             for layer in self.layers:
 
-                grad_w = np.zeros(layer.grad_w.shape)
-                grad_bias = np.zeros(layer.grad_bias.shape)
                 n_inputs = input_data.shape[1]
 
-                for i in range(n_inputs):
-                    x = input_data[:, i].reshape(2, 1)
-                    d = output_data[:, i].reshape(1, 1)
-                    self.compute_gradient(x, d)
-                    grad_w += layer.grad_w/n_inputs
-                    grad_bias += layer.grad_bias/n_inputs
+                i = np.random.randint(0, n_inputs)
 
-                alpha = 0.15
-                layer.weights -= alpha * grad_w
-                layer.bias -= alpha * grad_bias
+                x = input_data[:, i].reshape(2, 1)
+                d = output_data[:, i].reshape(1, 1)
+                self.compute_gradient(x, d)
+
+                alpha = 0.5
+                layer.weights -= alpha * layer.grad_w
+                layer.bias -= alpha * layer.grad_bias
 
             if generate_graph:
 
-                if iter % 1000 == 0:
+                if iter % 40 == 0:
                     iterations.append(iter)
                     e2 = np.zeros((1, 1))
                     for i in range(n_inputs):
@@ -101,8 +98,8 @@ class NeuralNetwork:
 
         if generate_graph:
             plt.plot(iterations, error_historic)
+            plt.title('SGD Performance')
             plt.legend(['Quadratic error'])
-            plt.show()
             plt.savefig("result.png")
 
 
