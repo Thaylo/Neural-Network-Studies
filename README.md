@@ -1,6 +1,6 @@
 # Neural Network Studies
 
-This project is aims to track practical progress with ANN algorithm implementations.
+This project aims to track practical progress with ANN algorithm implementations.
 
 ![Alt text](/images/result.png?raw=true "Title")
 
