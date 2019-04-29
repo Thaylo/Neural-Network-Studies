@@ -4,6 +4,14 @@ This project aims to track practical progress with ANN algorithm implementations
 
 ![Alt text](/images/result.png?raw=true "Title")
 
+## Pending Features
+
+ReLU, Convolution, Softmax, Dropout;
+Formalized Optimizers;
+Dataset manipulation;
+Performance;
+GPU support.
+
 ## Running the tests
 
 TODO
